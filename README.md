@@ -6,4 +6,5 @@ The purpose of science is to predict and control the subject matter under invest
 The purpose of this project is to compare the predictive ability of models when the models are: solely based on past models from operant choice research, solely based on machine learning, and a combination of both behavior analytic and machine learning models.
 
 # Data
-Data were obtained from the Kaggle MLB Pitch Data 2015-2018 dataset (https://www.kaggle.com/pschale/mlb-pitch-data-20152018/). 
+Data for one project were obtained from the Kaggle MLB Pitch Data 2015-2018 dataset (https://www.kaggle.com/pschale/mlb-pitch-data-20152018/). 
+Data for a second project were obtained from MLB's baseball savant. 

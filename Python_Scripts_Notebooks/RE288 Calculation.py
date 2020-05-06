@@ -31,11 +31,11 @@ from RE288 import RE288_calc
 
 # %% Play with specific data
 
-data_raw = pd.read_csv("savant_data.csv")
+data_raw = pd.read_csv("pirates_2016.csv")
 len(data_raw)
 data_raw.head()
 
-data = pd.read_csv('ARI.csv')
+data = pd.read_csv('pirates_2016.csv')
 list(data)
 data_list = ['balls', 'strikes', 'on_3b', 'on_2b', 'on_1b', 'outs_when_up', 'inning', \
              'inning_topbot', 'game_pk', 'at_bat_number', 'pitch_number', 'bat_score', 'post_bat_score']

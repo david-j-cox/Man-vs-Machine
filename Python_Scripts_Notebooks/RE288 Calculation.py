@@ -22,7 +22,7 @@ import seaborn as sns
 sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')
 
 # Set working directory
-os.chdir('C:/Users/David-Pc/Dropbox/Baseball Matching/')
+os.chdir('C:/Users/David-PC/Dropbox/Baseball Matching/')
 
 # Change settings to view all columns of data
 pd.set_option('display.max_columns', None)
@@ -46,7 +46,7 @@ data = data_use
 #   add game state column to each .csv file, and \
 #   save new .csv with different file name indicating change made.  
 
-# for file in glob.glob(path):    
+for file in glob.glob(path):
     data = pd.read_csv(file)
 
     # Replace null values with 0s. 

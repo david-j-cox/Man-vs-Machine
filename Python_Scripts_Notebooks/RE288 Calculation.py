@@ -102,12 +102,30 @@ for file in glob.glob(path):
     
     # Add column to indicate the change in score after each pitch. 
     data_gs['total_runs'] = data['home_score'] + data['away_score']
-    data_gs['change_score'] = data_gs.total_runs - data_gs.total_runs.shift()
+    change_score = []
+    for row, value in enumerate(data_gs['inning_same']):
+        if (value==True):
+            minus = row-1
+            change_val = data_gs.total_runs[row] - data_gs.total_runs[minus]
+            if change_val >= 0:
+                change_score.append(change_val)
+            else:
+                change_score.append(0)
+        else:
+            change_score.append(0)
+    
     for row,value in enumerate(data_gs['change_score']):
         if (value<0):
             value = 0
         else:
             value = value
+    
+    # Append the change_score col to df
+    change_score = pd.DataFrame(change_score)
+    change_score.columns = ['change_score']
+    data_gs = pd.concat([data_gs, change_score], axis=1)  
+    
+    
       
     # Add column that sums number of runs scored in that inning after each pitch. 
     last_false = 0
@@ -115,7 +133,8 @@ for file in glob.glob(path):
     run_sum_val = 0
     for row, value in enumerate(data_gs['inning_same']):
         if (value==False):
-            run_sum_val = data_gs['change_score'].loc[last_false:row].cumsum()
+            end = row-1
+            run_sum_val = data_gs['change_score'].loc[last_false:end].cumsum()
             run_sum.append(run_sum_val)
             last_false = row + 1
             print('appended')
@@ -125,12 +144,12 @@ for file in glob.glob(path):
     for sublist in run_sum:
         for i in sublist:
             all_run_sums.append(i)
-        
+    
+    # Append the cumulative sum of runs to the df
     runs_to_inning_end = pd.DataFrame(all_run_sums)
     runs_to_inning_end.columns = ['runs_inn_end']
     data_gs = pd.concat([data_gs, runs_to_inning_end], axis=1)
 
-data_gs = data_gs.drop(['inning_run_sum'], axis=1)
 data_gs.head(50)
     
     # Save new dataframe to new .csv file titled *_gs.csv

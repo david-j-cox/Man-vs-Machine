@@ -118,7 +118,6 @@ for file in glob.glob(path):
             run_sum_val = data_gs['change_score'].loc[last_false:row].cumsum()
             run_sum.append(run_sum_val)
             last_false = row + 1
-            run_sum.append(0)
             print('appended')
         else:
             pass
@@ -126,17 +125,13 @@ for file in glob.glob(path):
     for sublist in run_sum:
         for i in sublist:
             all_run_sums.append(i)
-    
-    print(run_sum)
-    len(data_gs)
-    len(run_sum)
-    print(all_run_sums)
-    
-    data_gs['inning_run_sum'] = 
-    (data_gs.groupby(data_gs['inning_same'].eq(False).cumsum())
-                   ['change_score'].apply(lambda x: (x[::-1].cumsum())[::-1] ))
-    
-    print(data_gs[:50])
+        
+    runs_to_inning_end = pd.DataFrame(all_run_sums)
+    runs_to_inning_end.columns = ['runs_inn_end']
+    data_gs = pd.concat([data_gs, runs_to_inning_end], axis=1)
+
+data_gs = data_gs.drop(['inning_run_sum'], axis=1)
+data_gs.head(50)
     
     # Save new dataframe to new .csv file titled *_gs.csv
     data_gs.to_csv(file+'_gs.csv')

@@ -105,24 +105,38 @@ for file in glob.glob(path):
     runs_scored = []
     for row, value in enumerate(data_gs['game_pk']):
         curr_game = value
-        prev_row_game = row+1
-        prev_row_game_val = data_gs.game_pk[prev_row_game]
-        if (curr_game!=prev_row_game_val):
-            runs = data_gs.home_score[row] + data_gs.away_score[row]
-            runs_scored.append(runs)
-        elif (row==0):
-            prev_row = row+1
-            ho_sc_1 = data_gs.home_score[row]
-            aw_sc_1 = data_gs.away_score[row]
-            curr_tot = ho_sc_1 + aw_sc_1
-            ho_sc_2 = data_gs.home_score[prev_row]
-            aw_sc_2 = data_gs.away_score[prev_row]
-            prev_tot = ho_sc_2 + aw_sc_2
-            if (curr_tot < prev_tot):
-                runs_scored.append(prev_tot)
+        df_length = len(data_gs)
+        if (row<df_length):
+            prev_row_game = row+1
+            prev_row_game_val = data_gs.game_pk[prev_row_game]
+            if (curr_game!=prev_row_game_val):
+                runs = data_gs.home_score[row] + data_gs.away_score[row]
+                runs_scored.append(runs)
+            if (row==0):
+                prev_row = row+1
+                ho_sc_1 = data_gs.home_score[row]
+                aw_sc_1 = data_gs.away_score[row]
+                curr_tot = ho_sc_1 + aw_sc_1
+                ho_sc_2 = data_gs.home_score[prev_row]
+                aw_sc_2 = data_gs.away_score[prev_row]
+                prev_tot = ho_sc_2 + aw_sc_2
+                if (curr_tot < prev_tot):
+                    runs_scored.append(prev_tot)
+                else:
+                    runs_scored.append(curr_tot)
             else:
-                runs_scored.append(curr_tot)
-        else:
+                prev_row = row-1
+                ho_sc_1 = data_gs.home_score[row]
+                aw_sc_1 = data_gs.away_score[row]
+                curr_tot = ho_sc_1 + aw_sc_1
+                ho_sc_2 = data_gs.home_score[prev_row]
+                aw_sc_2 = data_gs.away_score[prev_row]
+                prev_tot = ho_sc_2 + aw_sc_2
+                if (curr_tot > prev_tot):
+                    runs_scored.append(prev_tot)
+                else:
+                    runs_scored.append(curr_tot)
+        if (row==df_length):
             prev_row = row-1
             ho_sc_1 = data_gs.home_score[row]
             aw_sc_1 = data_gs.away_score[row]
@@ -134,6 +148,9 @@ for file in glob.glob(path):
                 runs_scored.append(prev_tot)
             else:
                 runs_scored.append(curr_tot)
+    
+    data_gs.head(-10)
+    len(data_gs)
     
     # Append total runs col to df.
     change_score = pd.DataFrame(runs_scored)

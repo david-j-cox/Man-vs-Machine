@@ -105,7 +105,7 @@ for file in glob.glob(path):
     runs_scored = []
     for row, value in enumerate(data_gs['game_pk']):
         curr_game = value
-        df_length = len(data_gs)
+        df_length = len(data_gs)-1
         if (row<df_length):
             prev_row_game = row+1
             prev_row_game_val = data_gs.game_pk[prev_row_game]
@@ -148,9 +148,6 @@ for file in glob.glob(path):
                 runs_scored.append(prev_tot)
             else:
                 runs_scored.append(curr_tot)
-    
-    data_gs.head(-10)
-    len(data_gs)
     
     # Append total runs col to df.
     change_score = pd.DataFrame(runs_scored)

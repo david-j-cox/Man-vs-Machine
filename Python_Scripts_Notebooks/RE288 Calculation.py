@@ -94,31 +94,80 @@ for file in glob.glob(path):
     
     # Sort by game_date, inning, 
     data_gs = data_gs.sort_values(['game_pk', 'inning', 'outs_when_up', 'pitch_number'], \
-                                  ascending=(True,True, True, True))
+                                  ascending=(True,False,False,False))
     data_gs = data_gs.reset_index()
-    print(data_gs[80:100])
+    
     # Add column to indicate whether the inning changed after each pitch. 
     data_gs['inning_same'] = data_gs.inning == data_gs.inning.shift()
     
+    # Add column of total runs scored to this point in game. 
+    data_gs['total_runs'] = data['home_score'] + data['away_score'] 
+    runs_scored = []
+    for row, value in enumerate(data_gs['game_pk']):
+        curr_game = value
+        df_length = len(data_gs)-1
+        if (row<df_length):
+            prev_row_game = row+1
+            prev_row_game_val = data_gs.game_pk[prev_row_game]
+            if (curr_game!=prev_row_game_val):
+                runs = data_gs.home_score[row] + data_gs.away_score[row]
+                runs_scored.append(runs)
+            if (row==0):
+                prev_row = row+1
+                ho_sc_1 = data_gs.home_score[row]
+                aw_sc_1 = data_gs.away_score[row]
+                curr_tot = ho_sc_1 + aw_sc_1
+                ho_sc_2 = data_gs.home_score[prev_row]
+                aw_sc_2 = data_gs.away_score[prev_row]
+                prev_tot = ho_sc_2 + aw_sc_2
+                if (curr_tot < prev_tot):
+                    runs_scored.append(prev_tot)
+                else:
+                    runs_scored.append(curr_tot)
+            else:
+                prev_row = row-1
+                ho_sc_1 = data_gs.home_score[row]
+                aw_sc_1 = data_gs.away_score[row]
+                curr_tot = ho_sc_1 + aw_sc_1
+                ho_sc_2 = data_gs.home_score[prev_row]
+                aw_sc_2 = data_gs.away_score[prev_row]
+                prev_tot = ho_sc_2 + aw_sc_2
+                if (curr_tot > prev_tot):
+                    runs_scored.append(prev_tot)
+                else:
+                    runs_scored.append(curr_tot)
+        if (row==df_length):
+            prev_row = row-1
+            ho_sc_1 = data_gs.home_score[row]
+            aw_sc_1 = data_gs.away_score[row]
+            curr_tot = ho_sc_1 + aw_sc_1
+            ho_sc_2 = data_gs.home_score[prev_row]
+            aw_sc_2 = data_gs.away_score[prev_row]
+            prev_tot = ho_sc_2 + aw_sc_2
+            if (curr_tot > prev_tot):
+                runs_scored.append(prev_tot)
+            else:
+                runs_scored.append(curr_tot)
+    
+    # Append total runs col to df.
+    change_score = pd.DataFrame(runs_scored)
+    change_score.columns = ['total_runs']
+    data_gs = pd.concat([data_gs, runs_scored], axis=1)  
+    
     # Add column to indicate the change in score after each pitch. 
-    data_gs['total_runs'] = data['home_score'] + data['away_score']
-    change_score = []
+    change_score = [] 
     for row, value in enumerate(data_gs['inning_same']):
         if (value==True):
             minus = row-1
-            change_val = data_gs.total_runs[row] - data_gs.total_runs[minus]
+            change_val = data_gs.total_runs[minus] - data_gs.total_runs[row]
             if change_val >= 0:
                 change_score.append(change_val)
             else:
                 change_score.append(0)
         else:
             change_score.append(0)
-    
-    for row,value in enumerate(data_gs['change_score']):
-        if (value<0):
-            value = 0
-        else:
-            value = value
+
+
     
     # Append the change_score col to df
     change_score = pd.DataFrame(change_score)
@@ -151,6 +200,7 @@ for file in glob.glob(path):
     data_gs = pd.concat([data_gs, runs_to_inning_end], axis=1)
 
 data_gs.head(50)
+list(data_gs)
     
     # Save new dataframe to new .csv file titled *_gs.csv
     data_gs.to_csv(file+'_gs.csv')

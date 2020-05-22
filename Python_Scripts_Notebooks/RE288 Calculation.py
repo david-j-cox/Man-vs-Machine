@@ -94,7 +94,7 @@ for file in glob.glob(path):
     
     # Sort by game_date, inning, 
     data_gs = data_gs.sort_values(['game_pk', 'inning', 'outs_when_up', 'pitch_number'], \
-                                  ascending=(True,True, True, True))
+                                  ascending=(True,False,False,False))
     data_gs = data_gs.reset_index()
     print(data_gs[80:100])
     # Add column to indicate whether the inning changed after each pitch. 
@@ -113,12 +113,8 @@ for file in glob.glob(path):
                 change_score.append(0)
         else:
             change_score.append(0)
-    
-    for row,value in enumerate(data_gs['change_score']):
-        if (value<0):
-            value = 0
-        else:
-            value = value
+
+
     
     # Append the change_score col to df
     change_score = pd.DataFrame(change_score)

@@ -8,3 +8,4 @@ The purpose of this project is to compare the predictive ability of models when 
 # Data
 Data for one project were obtained from the Kaggle MLB Pitch Data 2015-2018 dataset (https://www.kaggle.com/pschale/mlb-pitch-data-20152018/). 
 Data for a second project were obtained from MLB's baseball savant. 
+Data for a third project were obtained from the Stanford Open Policing Project (https://openpolicing.stanford.edu/data/) and the Mapping Police Violence Project (https://mappingpoliceviolence.org/). 

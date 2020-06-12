@@ -44,6 +44,8 @@ plt.show()
 
 #%% Create list of office ids for separating data out
 officers = data.officer_id_hash.unique()
+print('Number of officers in df: ', len(officers))
 
-data.date.max()
-data.date.min()
+#%% Pull one officer to run analysis with
+ofcr_a = data.loc[data['officer_id_hash']=='80ed1b32eb']
+print('Officer %s pulled over ', len(ofcr_a), 'people between 2010 and 2019' %s '80ed1b32eb')

@@ -48,4 +48,6 @@ print('Number of officers in df: ', len(officers))
 
 #%% Pull one officer to run analysis with
 ofcr_a = data.loc[data['officer_id_hash']=='80ed1b32eb']
-print('Officer %s pulled over ', len(ofcr_a), 'people between 2010 and 2019' %s '80ed1b32eb')
+print('Officer 80ed1b32eb pulled over', len(ofcr_a), 'people between 2010 and 2019')
+
+#%% 

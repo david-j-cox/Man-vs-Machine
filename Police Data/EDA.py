@@ -30,7 +30,7 @@ data = raw_data.copy()
 list(data)
 len(data)
 
-#%% Plot the number of times 
+#%% Plot the number of times different races were pulled over. 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -42,6 +42,15 @@ plt.ylabel('Number of Stops', fontsize=16)
 plt.xlabel('Race', fontsize=16)
 plt.show()
 
+#%% Plot the number of times different races were pulled over. 
+sex_counts = data.subject_sex.value_counts()
+plt.figure(figsize=(10,5))
+sns.barplot(sex_counts.index, sex_counts.values, color='black')
+plt.title('Nashville, TN (2010-2019)')
+plt.ylabel('Number of Stops', fontsize=16)
+plt.xlabel('Sex', fontsize=16)
+plt.show()
+
 #%% Create list of office ids for separating data out
 officers = data.officer_id_hash.unique()
 print('Number of officers in df: ', len(officers))
@@ -50,4 +59,10 @@ print('Number of officers in df: ', len(officers))
 ofcr_a = data.loc[data['officer_id_hash']=='80ed1b32eb']
 print('Officer 80ed1b32eb pulled over', len(ofcr_a), 'people between 2010 and 2019')
 
-#%% 
+#%% Create lists of sums of every 50 row
+search_counts = ofcr_a.
+ofcr_a_prob_search = 
+
+
+ofcr_a.head(20)
+

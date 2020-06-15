@@ -42,6 +42,25 @@ plt.ylabel("Number of Stops (Total = %s)" %len(data), fontsize=16)
 plt.xlabel('Race', fontsize=16)
 plt.show()
 
+#%% Plot proportion stops with different races compared to 2019 census data
+race_counts = pd.DataFrame(race_counts)
+race_counts.columns = 'Stops'
+race_counts
+race_demographics = [0.6316, 0.2788, 0.1654, 0.0355, 0.0282]
+
+plt.figure(figsize=(10,5))
+barWidth = 0.3
+r1 = np.arange(len(race_props))
+r2 = [x + barWidth for x in r1]
+plt.bar(r1, race_demographics, width=barWidth, color='black', edgecolor='black', label='Proportion 2018 Census')
+plt.bar(r2, race_props, width=barWidth, color='gray', edgecolor='black', label='Proportion Police Stops')
+plt.title('Nashville, TN (2010-2019)')
+plt.xticks([r + barWidth for r in range(len(race_demographics))], race_props.values)
+plt.ylabel("Proportion of Stops vs. Demographics", fontsize=16)
+plt.xlabel('Race', fontsize=16)
+plt.ylim(0, 1)
+plt.show()
+
 #%% Plot the number of times different races were pulled over. 
 sex_counts = data.subject_sex.value_counts()
 plt.figure(figsize=(10,5))

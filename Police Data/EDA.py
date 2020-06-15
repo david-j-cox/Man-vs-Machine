@@ -50,12 +50,12 @@ race_counts['Demographics'] = [0.6316, 0.2788, 0.1654, 0.0355, 0.00, 0.0282]
 #%% Plot proportion stops with different races compared to 2019 census data
 plt.figure(figsize=(10,5))
 barWidth = 0.3
-r1 = np.arange(len(race_props))
+r1 = np.arange(len(race_counts))
 r2 = [x + barWidth for x in r1]
 plt.bar(r1, (race_counts.Stops)/len(data), width=barWidth, color='black', edgecolor='black', label='Proportion Police Stops')
 plt.bar(r2, race_counts.Demographics, width=barWidth, color='gray', edgecolor='black', label='Proportion 2018 Census')
 plt.title('Nashville, TN (2010-2019)')
-plt.xticks([r + barWidth for r in range(len(race_demographics))], race_counts.index)
+plt.xticks([r + barWidth for r in range(len(race_counts))], race_counts.index)
 plt.ylabel("Proportion of Stops or Population", fontsize=16)
 plt.xlabel('Race', fontsize=16)
 plt.ylim(0, 1)

@@ -135,20 +135,19 @@ contra_add = []
 for i in list(range(len(search_and_find))):
     if search_and_find.Num_Searches[i] == 0:
         contra_add.append(0)
-    elif search_and_find.Num_Contra_Found[i] == 0:
+    if search_and_find.Num_Contra_Found[i] == 0:
         contra_add.append(0)
     else:
-        num = round(search_and_find.Num_Contra_Found[i]/search_and_find.Num_Searches[i], 2)
+        num = search_and_find.Num_Contra_Found[i]/search_and_find.Num_Searches[i]
         contra_add.append(num)
 
 search_and_find['contra_plot'] = contra_add
 
-search_and_find
 #%% Plot scatter of search count as a function of contraband found
 plt.figure(figsize=(5,5))
-sns.regplot(x=search_and_find['contra_plot'], y=search_and_find['search_plot'])
-plt.xlim(0, 1)
-plt.ylim(0, 1)
-plt.xlabel('Prop. of Searches with Contraband', fontsize=16)
-plt.ylabel('Prop. of Stops with Search', fontsize=16)
+sns.regplot(x=search_data, y=contraband_data)
+plt.xlim(0, 5)
+plt.ylim(0, 5)
+plt.xlabel('Number of Stops with Contraband', fontsize=16)
+plt.ylabel('NUmber of Stops with Search', fontsize=16)
 plt.show()

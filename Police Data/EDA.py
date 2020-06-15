@@ -38,7 +38,7 @@ race_counts = data.subject_race.value_counts()
 plt.figure(figsize=(10,5))
 sns.barplot(race_counts.index, race_counts.values, color='black')
 plt.title('Nashville, TN (2010-2019)')
-plt.ylabel('Number of Stops', fontsize=16)
+plt.ylabel("Number of Stops (Total = %s)" %len(data), fontsize=16)
 plt.xlabel('Race', fontsize=16)
 plt.show()
 

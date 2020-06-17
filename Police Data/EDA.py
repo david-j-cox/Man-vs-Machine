@@ -16,7 +16,7 @@ import numpy as np
 import scipy
 
 # Point to local file for custom scripts. 
-sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')  # Home PC
+sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')
 
 #% Set working directory
 os.chdir('C:/Users/David-PC/Dropbox/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching & Police Behavior')

@@ -25,12 +25,13 @@ os.chdir('C:/Users/David-PC/Dropbox/Projects/CurrentProjectManuscripts/Empirical
 pd.set_option('display.max_columns', None)
 
 #%% Read in the data
-raw_data = pd.read_csv('tn_nashville_2020_04_01.csv', low_memory=False)
-data = raw_data.copy()
+nash_raw_data = pd.read_csv('tn_nashville_2020_04_01.csv', low_memory=False)
+nash_data = nash_raw_data.copy()
 list(data)
 len(data)
 
 #%% Run Pandas Profiling
+from pandas_profiling import ProfileReport
 profile = ProfileReport(nash_data, title="Nashville EDA", explorative=True)
 profile.to_widgets()
 

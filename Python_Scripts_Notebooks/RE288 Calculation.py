@@ -50,19 +50,12 @@ with open('All_MLB_data.csv', 'a') as singleFile:
                     singleFile.write(line)
 singleFile.close()
 
-# %% Play with specific data
-data_raw = pd.read_csv("angels_2016.csv", nrows=20, skiprows=23695, error_bad_lines=False)
-data_raw
-data = data_raw.copy()
-len(data_raw)
-data_raw.head()
-
 # %% Iterate through files in folder to calculate game state for each pitch, \
 #   add game state column to each .csv file, and \
 #   save new .csv with different file name indicating change made.  
 
 for file in glob.glob(path):    
-    data_raw = pd.read_csv('angels_2016.csv') # Read in file
+    data_raw = pd.read_csv(file) # Read in file
     # Select only the cols we need
     data_list = ['pitch_type','game_date','batter','pitcher','events','description',\
           'zone','des','stand','p_throws','home_team','away_team','type','hit_location',\
@@ -100,8 +93,8 @@ for file in glob.glob(path):
     # Add column to indicate whether the inning changed after each pitch. 
     data_gs['inning_same'] = data_gs.inning == data_gs.inning.shift()
     
-    # Add column of total runs scored to this point in game. 
-    data_gs['total_runs'] = data['home_score'] + data['away_score']
+    # Add column of total runs scored to this pitch in the inning. 
+    #data_gs['total_runs'] = data['home_score'] + data['away_score']
     runs_scored = []
     for row, value in enumerate(data_gs['game_pk']):
         curr_game = value
@@ -156,27 +149,23 @@ for file in glob.glob(path):
     data_gs = pd.concat([data_gs, runs_scored], axis=1)  
     
     # Add column to indicate the change in score after each pitch. 
-   data_gs['inning_same'][:10]
-    change_score = [] 
-    for row, value in enumerate(data_gs['inning_same']):
-        if (value==True):
-            minus = row-1
-            change_val = data_gs.total_runs[minus] - data_gs.total_runs[row]
-            if change_val >= 0:
-                change_score.append(change_val)
-            else:
-                change_score.append(0)
-        else:
-            change_score.append(0)
-
-
+   #data_gs['inning_same'][:10]
+   change_score = []
+   for row, value in enumerate(data_gs['inning_same']):
+       if (value==True):
+           minus = row-1
+           change_val = data_gs.total_runs[minus] - data_gs.total_runs[row]
+           if change_val >= 0:
+                  change_score.append(change_val)
+           else:
+              change_score.append(0)
+       else:
+           change_score.append(0)
     
     # Append the change_score col to df
     change_score = pd.DataFrame(change_score)
     change_score.columns = ['change_score']
-    data_gs = pd.concat([data_gs, change_score], axis=1)  
-    
-    
+    data_gs = pd.concat([data_gs, change_score], axis=1)   
       
     # Add column that sums number of runs scored in that inning after each pitch. 
     last_false = 0
@@ -200,9 +189,6 @@ for file in glob.glob(path):
     runs_to_inning_end = pd.DataFrame(all_run_sums)
     runs_to_inning_end.columns = ['runs_inn_end']
     data_gs = pd.concat([data_gs, runs_to_inning_end], axis=1)
-
-data_gs.head(50)
-list(data_gs)
     
     # Save new dataframe to new .csv file titled *_gs.csv
     data_gs.to_csv(file+'_gs.csv')

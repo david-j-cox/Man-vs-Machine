@@ -16,19 +16,27 @@ import numpy as np
 import scipy
 
 # Point to local file for custom scripts. 
-sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')  # Home PC
+sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')
 
 #% Set working directory
-os.chdir('C:/Users/David-PC/Dropbox/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching & Police Behavior')
+os.chdir('C:/Users/David-PC/Dropbox/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching & Police Behavior/Data')
 
 # Change settings to view all columns of data
 pd.set_option('display.max_columns', None)
 
 #%% Read in the data
-raw_data = pd.read_csv('tn_nashville_2020_04_01.csv', low_memory=False)
-data = raw_data.copy()
+nash_raw_data = pd.read_csv('tn_nashville_2020_04_01.csv', low_memory=False)
+nash_data = nash_raw_data.copy()
 list(data)
 len(data)
+
+#%% Run Pandas Profiling
+from pandas_profiling import ProfileReport
+profile = ProfileReport(nash_data, title="Nashville EDA", explorative=True)
+profile.to_widgets()
+
+#%% Save profile report to an html file
+profile.to_file("Nashville_Policing_Initial_EDA.html")
 
 #%% Plot the number of times different races were pulled over. 
 import matplotlib.pyplot as plt

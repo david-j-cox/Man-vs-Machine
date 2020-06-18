@@ -150,11 +150,13 @@ for file in glob.glob(path):
                 runs_scored.append(curr_tot)
     
     # Append total runs col to df.
+    runs_scored = pd.DataFrame(runs_scored)
     change_score = pd.DataFrame(runs_scored)
     change_score.columns = ['total_runs']
     data_gs = pd.concat([data_gs, runs_scored], axis=1)  
     
     # Add column to indicate the change in score after each pitch. 
+   data_gs['inning_same'][:10]
     change_score = [] 
     for row, value in enumerate(data_gs['inning_same']):
         if (value==True):

@@ -17,10 +17,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from RE288 import RE288_calc
 
 # Point to local file for custom scripts. 
 sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')
+from RE288 import RE288_calc
 
 # Set working directory
 path = os.chdir('C:/Users/David-PC/Dropbox/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/Data/')
@@ -51,7 +51,7 @@ with open('All_MLB_data.csv', 'a') as singleFile:
 singleFile.close()
 
 # %% Play with specific data
-data_raw = pd.read_csv("All_MLB_data.csv", nrows=20, skiprows=23695, error_bad_lines=False)
+data_raw = pd.read_csv("angels_2016.csv", nrows=20, skiprows=23695, error_bad_lines=False)
 data_raw
 data = data_raw.copy()
 len(data_raw)
@@ -101,7 +101,7 @@ for file in glob.glob(path):
     data_gs['inning_same'] = data_gs.inning == data_gs.inning.shift()
     
     # Add column of total runs scored to this point in game. 
-    data_gs['total_runs'] = data['home_score'] + data['away_score'] 
+    data_gs['total_runs'] = data['home_score'] + data['away_score']
     runs_scored = []
     for row, value in enumerate(data_gs['game_pk']):
         curr_game = value

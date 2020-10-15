@@ -75,7 +75,7 @@ def RE24_calc(data, outs, runner_first, runner_second, runner_third):
         elif row[outs]==2 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
             game_state.append(3)
 
-        if row[outs]==0 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]=>.0:
+        if row[outs]==0 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]>.0:
             game_state.append(1)
         elif row[outs]==1 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
             game_state.append(2)

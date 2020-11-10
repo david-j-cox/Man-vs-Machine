@@ -16,6 +16,7 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 import seaborn as sns
+import random
 
 # Set path to local scripts
 sys.path.append('/Users/davidjcox/Dropbox/Coding/Local Python Modules/')
@@ -52,4 +53,64 @@ FT = odorizzi_df[odorizzi_df['pitch_type']=='FT']
 IN = odorizzi_df[odorizzi_df['pitch_type']=='IN']
 PO = odorizzi_df[odorizzi_df['pitch_type']=='PO']
 
-#%%
+#%% Create a rolling window of reinforcement for each pitch type
+# cumsum() pandas.rolling_window()
+fastballs = ['FF', 'FS', 'FT']
+num_fast = 0
+count = []
+for i in range(len(odorizzi_df)):
+    if odorizzi_df['pitch_type'][i] in fastballs:
+        num_fast +=1
+        count.append(num_fast)
+    else:
+        num_fast -=1
+        count.append(num_fast)
+
+count = pd.DataFrame(count)
+x_values = range(len(odorizzi_df))
+count['x_vals'] = x_values
+count.columns = ['count', 'x_vals']
+
+#%% Reinforcement learning model
+movement = []
+rl_pred = []
+iteration = 1
+err = 20
+
+for i in range(len(count)):
+    rand = random.random()
+    if rand < 0.5:
+        rand = rand*-err
+    else:
+        rand = rand*err
+    rand = int(rand)
+    movement.append(rand)
+    val = count['count'][i]
+    pred = val+rand
+    rl_pred.append(pred)
+    iteration+=1
+    if iteration%10==0:
+        err = err*0.97
+
+count['rl_pred'] = rl_pred
+count['error'] = count['count']-count['rl_pred']
+
+#%% Plot dynamics of fastballs over time
+f, ax = plt.subplots(figsize=(15, 10))
+plt.scatter('x_vals','error', data=count, marker='o', color='k')
+# Making it look good
+plt.xlabel("Pitch Number Out of %s" %len(odorizzi_df), fontsize=24, labelpad=(16))
+plt.xticks(fontsize=16)
+plt.xlim(0, 2000)
+plt.ylabel("ML Prediction Error (Observed-Predicted)", fontsize=24, labelpad=(16))
+plt.title('Jake Odorizzi Predictions', fontsize=24)
+plt.yticks(fontsize=18)
+right_side = ax.spines["right"]
+right_side.set_visible(False)
+top = ax.spines["top"]
+top.set_visible(False)
+# plt.savefig('qa_metrics.png', bbox_inches='tight')
+plt.show()
+
+#%% Reinforcement learning model to predict the next pitch
+from tensorforce.agents import Agent

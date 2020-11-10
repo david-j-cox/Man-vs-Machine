@@ -90,7 +90,7 @@ for i in range(len(count)):
     rl_pred.append(pred)
     iteration+=1
     if iteration%10==0:
-        err = err*0.97
+        err = err*0.9925
 
 count['rl_pred'] = rl_pred
 count['error'] = count['count']-count['rl_pred']
@@ -101,8 +101,8 @@ plt.scatter('x_vals','error', data=count, marker='o', color='k')
 # Making it look good
 plt.xlabel("Pitch Number Out of %s" %len(odorizzi_df), fontsize=24, labelpad=(16))
 plt.xticks(fontsize=16)
-plt.xlim(0, 2000)
-plt.ylabel("ML Prediction Error (Observed-Predicted)", fontsize=24, labelpad=(16))
+plt.xlim(0, 5000)
+plt.ylabel("Prediction Loss Term", fontsize=24, labelpad=(16))
 plt.title('Jake Odorizzi Predictions', fontsize=24)
 plt.yticks(fontsize=18)
 right_side = ax.spines["right"]
@@ -113,4 +113,42 @@ top.set_visible(False)
 plt.show()
 
 #%% Reinforcement learning model to predict the next pitch
-from tensorforce.agents import Agent
+movement = []
+rl_pred = []
+iteration = 1
+err = 1
+
+for i in range(len(count)):
+    rand = random.random()
+    if iteration < 12:
+        movement.append(1)
+    elif (iteration >=12) and (iteration < 113):
+        if rand < 0.8:
+            val = 1
+        else:
+            val = 0
+        movement.append(val)
+    elif (iteration >=113) and (iteration < 1000):
+        if (iteration%100==0) or (iteration%23==0):
+            movement.append(1)
+        elif rand < 0.1:
+            val = 1
+            movement.append(val)
+        else:
+            val = 0
+            movement.append(val)
+    elif (iteration >=1000) and (iteration < 4236):
+        if (iteration%126==0):
+            movement.append(1)
+        elif rand < 0.005:
+            val = 1
+            movement.append(val)
+        else:
+            val = 0
+            movement.append(val)
+    else:
+        movement.append(0)
+    iteration +=1
+
+count['movement'] = movement
+count['error'] = count['movement'].cumsum()

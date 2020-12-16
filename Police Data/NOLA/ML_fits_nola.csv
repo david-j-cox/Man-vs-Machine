@@ -1,0 +1,17 @@
+﻿algorithm,predicting,accuracy,precision,recall,F1
+logistic_regression,citations,0.7525,0.7168,0.7525,0.711
+logistic_regression,frisks,0.9358,0.9334,0.9358,0.9342
+logistic_regression,searches,0.9999,0.9999,0.9999,0.9999
+logistic_regression,contraband,0.9691,0.9508,0.9691,0.957
+random_forest,citations,0.8423,0.8352,0.8423,0.8353
+random_forest,frisks,0.9629,0.964,0.9629,0.9634
+random_forest,searches,1,1,1,1
+random_forest,contraband,0.9786,0.9753,0.9786,0.9744
+adaboost,citations,0.789,0.7729,0.789,0.7749
+adaboost,frisks,0.9478,0.9484,0.9478,0.948
+adaboost,searches,1,1,1,1
+adaboost,contraband,0.9733,0.9659,0.9733,0.9665
+multilayer_perceptron,citations,0.8055,0.7966,0.8055,0.7994
+multilayer_perceptron,frisks,0.9517,0.9521,0.9517,0.9519
+multilayer_perceptron,searches,1,1,1,1
+multilayer_perceptron,contraband,0.9722,0.9667,0.9722,0.9686

@@ -37,3 +37,7 @@ for subdir, dirs, files in os.walk(directory):
 
 #%% Convert it into a pandas dataframe
 all_mlb_data = pd.DataFrame(all_mlb_data)
+
+#%%
+for i in range(len(all_mlb_data)):
+    print(all_mlb_data[i])

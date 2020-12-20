@@ -26,9 +26,13 @@ os.chdir(directory)
 # Change settings to view all columns of data
 pd.set_option('display.max_columns', None)
 
-#%% Read in the data
-raw_data = pd.read_csv()
-data = raw_data.copy()
-data.head()
+#%% Combien all data into a single .csv file
+all_mlb_data = []
 
-#%%
+for subdir, dirs, files in os.walk(directory):
+    for filename in files:
+        if 'csv' in filename:
+            raw_data = pd.read_csv(filename)
+            all_mlb_data.append(raw_data)
+
+#%% 

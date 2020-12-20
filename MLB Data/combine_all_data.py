@@ -40,10 +40,17 @@ for subdir, dirs, files in os.walk(directory):
 all_mlb_data = pd.concat(all_mlb_data)
 
 #%% Save it
-all_mlb_data.to_csv('MLB_pitches_08_19.csv')
+all_mlb_data.to_csv('all_pitches_08_19.csv')
 
 #%% If pikcing up fresh
-raw_data = pd.read_csv('MLB_pitches_08_19.csv')
+raw_data = pd.read_csv('all_pitches_08_19.csv').drop(['Unnamed: 0 '], axis=1)
 df = raw_data.copy()
 
 #%% Keep just the columns we're interested in using for the analysis
+df = df[['pitch_type', 'game_date', 'player_name', 'batter', 'events', 'description', 'des', 'home_team', 'away_team', \
+         'type', 'bb_type', 'balls', 'strikes', 'game_year', 'on_3b', 'on_2b', 'on_1b', 'outs_when_up', 'inning', \
+         'inning_topbot', 'at_bat_number', 'pitch_number', 'pitch_name', 'home_score', 'away_score', 'bat_score', \
+         'fld_score', 'post_away_score', 'post_home_score', 'post_bat_score', 'post_fld_score', 'if_fielding_alignment', \
+         'of_fielding_alignment']]
+
+#%% 

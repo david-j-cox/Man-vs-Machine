@@ -36,8 +36,7 @@ for subdir, dirs, files in os.walk(directory):
             all_mlb_data.append(raw_data)
 
 #%% Convert it into a pandas dataframe
-all_mlb_data = pd.DataFrame(all_mlb_data)
+all_mlb_data = pd.concat(all_mlb_data)
 
 #%%
-for i in range(len(all_mlb_data)):
-    print(all_mlb_data[i])
+all_mlb_data.to_csv('MLB_pitches_08_19')

@@ -35,4 +35,5 @@ for subdir, dirs, files in os.walk(directory):
             raw_data = pd.read_csv(filename)
             all_mlb_data.append(raw_data)
 
-#%% 
+#%% Convert it into a pandas dataframe
+all_mlb_data = pd.DataFrame(all_mlb_data)

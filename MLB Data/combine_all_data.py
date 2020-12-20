@@ -15,12 +15,13 @@ import pandas as pd
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Set path to local scripts
 sys.path.append('/Users/davidjcox/Dropbox/Coding/Local Python Modules/')
 
 # Set path to data
-directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/MLB Data/Team Data/'
+directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/MLB Data/'
 os.chdir(directory)
 
 # Change settings to view all columns of data
@@ -38,5 +39,11 @@ for subdir, dirs, files in os.walk(directory):
 #%% Convert it into a pandas dataframe
 all_mlb_data = pd.concat(all_mlb_data)
 
-#%%
+#%% Save it
 all_mlb_data.to_csv('MLB_pitches_08_19.csv')
+
+#%% If pikcing up fresh
+raw_data = pd.read_csv('MLB_pitches_08_19.csv')
+df = raw_data.copy()
+
+#%% Keep just the columns we're interested in using for the analysis

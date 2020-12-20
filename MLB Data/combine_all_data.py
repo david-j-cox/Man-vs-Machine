@@ -53,4 +53,8 @@ df = df[['pitch_type', 'game_date', 'player_name', 'batter', 'events', 'descript
          'fld_score', 'post_away_score', 'post_home_score', 'post_bat_score', 'post_fld_score', 'if_fielding_alignment', \
          'of_fielding_alignment']]
 
+#%% Remove players with fewer than 500 observations
+number_games = df['player_name'].value_counts()
+min_obs_df = df[~df['player_name'].isin(number_games[number_games< 500].index)]
+
 #%% 

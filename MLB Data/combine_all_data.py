@@ -21,7 +21,7 @@ import seaborn as sns
 sys.path.append('/Users/davidjcox/Dropbox/Coding/Local Python Modules/')
 
 # Set path to data
-directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/MLB Data/'
+directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/MLB Data/Team Data/'
 os.chdir(directory)
 
 # Change settings to view all columns of data

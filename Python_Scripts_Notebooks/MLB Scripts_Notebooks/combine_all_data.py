@@ -42,8 +42,8 @@ all_mlb_data = pd.concat(all_mlb_data)
 #%% Save it
 all_mlb_data.to_csv('all_pitches_08_19.csv')
 
-#%% If pikcing up fresh
-raw_data = pd.read_csv('all_pitches_08_19.csv').drop(['Unnamed: 0 '], axis=1)
+#%% If picking up fresh
+raw_data = pd.read_csv('all_pitches_08_19.csv')
 df = raw_data.copy()
 
 #%% Keep just the columns we're interested in using for the analysis

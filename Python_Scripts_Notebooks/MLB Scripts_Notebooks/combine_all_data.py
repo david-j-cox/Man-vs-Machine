@@ -58,3 +58,5 @@ number_games = df['player_name'].value_counts()
 min_obs_df = df[~df['player_name'].isin(number_games[number_games< 500].index)]
 
 #%% 
+
+len(df.player_name.unique())

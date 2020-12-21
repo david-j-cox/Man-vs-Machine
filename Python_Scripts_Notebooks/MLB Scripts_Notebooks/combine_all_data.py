@@ -42,19 +42,18 @@ all_mlb_data = pd.concat(all_mlb_data)
 #%% Save it
 all_mlb_data.to_csv('all_pitches_08_19.csv')
 
-#%% If pikcing up fresh
-raw_data = pd.read_csv('all_pitches_08_19.csv').drop(['Unnamed: 0 '], axis=1)
+#%% If picking up fresh
+raw_data = pd.read_csv('all_pitches_08_19.csv')
 df = raw_data.copy()
 
 #%% Keep just the columns we're interested in using for the analysis
-df = df[['pitch_type', 'game_date', 'player_name', 'batter', 'events', 'description', 'des', 'home_team', 'away_team', \
-         'type', 'bb_type', 'balls', 'strikes', 'game_year', 'on_3b', 'on_2b', 'on_1b', 'outs_when_up', 'inning', \
-         'inning_topbot', 'at_bat_number', 'pitch_number', 'pitch_name', 'home_score', 'away_score', 'bat_score', \
-         'fld_score', 'post_away_score', 'post_home_score', 'post_bat_score', 'post_fld_score', 'if_fielding_alignment', \
-         'of_fielding_alignment']]
+df = df[['game_year', 'game_date', 'home_team', 'away_team', 'player_name', 'pitcher', 'at_bat_number', 'batter', 'inning', \
+         'inning_topbot', 'balls', 'strikes', , 'on_3b', 'on_2b', 'on_1b', 'outs_when_up', 'home_score', 'away_score', 'bat_score', \
+         'fld_score', 'if_fielding_alignment', 'of_fielding_alignment', 'pitch_number', 'pitch_type', 'pitch_name', \
+         'type', 'bb_type', 'description', 'events', 'des', 'post_away_score', 'post_home_score', 'post_bat_score', 'post_fld_score', ]]
 
 #%% Remove players with fewer than 500 observations
 number_games = df['player_name'].value_counts()
 min_obs_df = df[~df['player_name'].isin(number_games[number_games< 500].index)]
 
-#%% 
+#%% Sort dataframe by year

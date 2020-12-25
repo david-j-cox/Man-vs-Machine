@@ -53,7 +53,8 @@ for subdir, dirs, files in os.walk(directory):
             err_type.append(err)
             troublesome.append(filename)
 
-#%% 
+#%% Combine into single dataframe and save
+all_df = pd.concat(all_data)
+all_df.to_csv('all_data.csv')
 
-audit_df = pd.DataFrame(list(zip(audit_ids, org_id, year)), columns=['audit_id', 'org_id', 'year'])
-audit_df.to_csv('completed_audits.csv')
+#%% 

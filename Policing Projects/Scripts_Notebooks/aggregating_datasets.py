@@ -57,4 +57,8 @@ for subdir, dirs, files in os.walk(directory):
 all_df = pd.concat(all_data)
 all_df.to_csv('all_data.csv')
 
-#%% 
+#%% Add year and month to df as unique cols
+all_df['year'] = pd.DatetimeIndex(all_df['date']).year
+all_df['month'] = pd.DatetimeIndex(all_df['date']).month
+
+#%%

@@ -20,9 +20,43 @@ import matplotlib.pyplot as plt
 sys.path.append('/Users/davidjcox/Dropbox/Coding/Local Python Modules/')
 
 # Set path to data
-os.chdir('/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/Policing Projects/Data/')
+directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/Policing Projects/Data/'
+os.chdir(directory)
 
 # Change settings to view all columns of data
 pd.set_option('display.max_columns', None)
 
-#%%% Loop through the files and combine all the datasets. 
+#%% Loop through the files and combine all the datasets. 
+all_data = []
+city_state = []
+state = []
+city = []
+troublesome = []
+err_type = []
+
+for subdir, dirs, files in os.walk(directory):
+    for filename in files:
+        filepath = os.path.join(subdir, filename)
+        try:
+            if '.csv' in filepath:
+                str_end = filename.find('2020')-1
+                string = filename[:str_end]
+                city_state.append(string)
+                sep = string.find('_')
+                state.append(string[:sep])
+                city.append(string[(sep+1):])
+                raw_data = pd.read_csv(filepath)
+                data = raw_data.copy()
+                data['city'] = city
+                data['state'] = state
+                print(data.head())
+                all_data.append(data)
+        except:
+            err = type(Exception).__name__
+            err_type.append(err)
+            troublesome.append(filename)
+
+#%% 
+
+audit_df = pd.DataFrame(list(zip(audit_ids, org_id, year)), columns=['audit_id', 'org_id', 'year'])
+audit_df.to_csv('completed_audits.csv')

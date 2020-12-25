@@ -28,9 +28,6 @@ pd.set_option('display.max_columns', None)
 
 #%% Loop through the files and combine all the datasets. 
 all_data = []
-city_state = []
-state = []
-city = []
 troublesome = []
 err_type = []
 
@@ -41,14 +38,14 @@ for subdir, dirs, files in os.walk(directory):
             if '.csv' in filepath:
                 str_end = filename.find('2020')-1
                 string = filename[:str_end]
-                city_state.append(string)
                 sep = string.find('_')
-                state.append(string[:sep])
-                city.append(string[(sep+1):])
-                raw_data = pd.read_csv(filepath)
+                t_city = string[:sep]
+                t_state = string[(sep+1):]
+                # Read in df and add cols for city sand state 
+                raw_data = pd.read_csv(filename)
                 data = raw_data.copy()
-                data['city'] = city
-                data['state'] = state
+                data['city'] = t_city
+                data['state'] = t_state
                 print(data.head())
                 all_data.append(data)
         except:

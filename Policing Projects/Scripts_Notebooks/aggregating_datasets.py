@@ -53,12 +53,14 @@ for subdir, dirs, files in os.walk(directory):
             err_type.append(err)
             troublesome.append(filename)
 
+# Combine into single dataframe
+all_df = pd.concat(all_data)
+
 # Add year and month to df as unique col
 all_df['year'] = pd.DatetimeIndex(all_df['date']).year
 all_df['month'] = pd.DatetimeIndex(all_df['date']).month
 
-# Combine into single dataframe and save
-all_df = pd.concat(all_data)
+# Save 
 all_df.to_csv('all_data.csv')
 
 #%% Some one-off stats for the ms

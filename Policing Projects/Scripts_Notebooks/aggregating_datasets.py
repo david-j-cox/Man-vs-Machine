@@ -87,7 +87,7 @@ for i in range(len(grouped_data)):
 #%% Plot letter-value plots / boxen plots of the different distributions. 
 def boxen(df, x_label):
   f, ax = plt.subplots(figsize=(2, 5))
-  sns.boxenplot(y=df, color='white')
+  sns.boxplot(y=df, color='white')
   plt.xlabel(x_label, fontsize=20, labelpad=(16))
   plt.ylabel('Count per Month', fontsize=20, labelpad=(16))
   plt.ylim(.1, 1000)
@@ -135,6 +135,7 @@ all_fit = pd.concat(all_fit)
 
 # Save 
 all_fit.to_csv('all_fits.csv')
+all_fit[::50000]
 
 #%% Separate out the different dfs for different events
 cite_fits = all_fit[all_fit['reniforcer']=='citations']
@@ -146,3 +147,227 @@ print((round((search_fits['vac'].ge(0.9).sum())/len(search_fits), 5)), "= Search
 print((round((frisk_fits['vac'].ge(0.9).sum())/len(frisk_fits), 5)), "= Frisk Proportion >90%")
 print((round((contra_fits['vac'].ge(0.9).sum())/len(contra_fits), 5)), "= Contraband Found Proportion >90%")
 print((round((arrest_fits['vac'].ge(0.9).sum())/len(arrest_fits), 5)), "= Arrest Proportion >90%")
+
+#%%####################################################################################################################
+# SINGLE-ALTERNATIVE MATCHING FITS
+#######################################################################################################################
+# Define single alternative matching equation and import packages we'll need to play with it.  
+from scipy.optimize import curve_fit
+from sklearn.metrics import r2_score
+
+def single_match(x, k, re):
+  return (k*x)/(x+re)
+
+#%% Functions for plots of single officer fits
+def overall_plot(i, ):
+    # Isolate single officer
+    offcr_hash = i
+    offcr_A = all_df[all_df['officer_id_hash']==i]
+    offcr_A = offcr_A[offcr_A['time'].notna()]
+    offcr_A = offcr_A.reset_index()
+  
+    # Calculate rate of stops per year and rate of citations per year
+    offcr_search = offcr_A.groupby(['year'])['search_conducted'].sum()
+    offcr_stops = offcr_A.groupby(['year']).size()
+  
+    try:
+      search_per_year = offcr_search / 12
+      stops_per_year = offcr_stops / 12
+
+      # Fit the single-alt matching equation to the officer data
+      behavior = stops_per_year.values
+      reinforcer = search_per_year.values
+      c, cov = curve_fit(single_match, reinforcer, behavior) # Fit model
+      preds_from_obs = single_match(reinforcer, *c)
+      r_2 = r2_score(behavior, preds_from_obs)
+
+      # Create data for plotting the curve predicted by the single-alternative matching
+      search_pred = np.linspace(0, search_per_year.max(), 100)
+      stop_pred = []
+      for j in list(range(len(search_pred))): # Predicted stops
+        pred = round(single_match(search_pred[j], c[0], c[1]), 4)
+        stop_pred.append(pred)
+      
+      # Plot behavior (stops) as a function of putative reinforcers (citations)
+      plt.figure(figsize=(10, 7.5))
+      plt.scatter(x=search_per_year, y=stops_per_year, marker='o', alpha=0.5, \
+                  color='black', s=100)
+      plt.plot(search_pred, stop_pred, marker='', linestyle='-', color='black')
+      plt.xlabel('Searches per Year', fontsize=30)
+      plt.ylabel('Stops per Year', fontsize=30)
+      plt.title('Officer ID: %s' %i, fontsize =14)
+      plt.text(search_per_year.max(), 0, '$R^2$=%s' %'{}'.format(round(r_2, 4)), \
+              fontsize=26, horizontalalignment='right')
+      plt.xticks(fontsize=20)
+      plt.yticks(fontsize=20)
+      plt.show()
+
+      # Run the same analysis, but grouped by race
+      # Calculate rate of stops per year and rate of citations per year
+      offcr_search = offcr_A.groupby(['year', 'subject_race'])['search_conducted'].sum().unstack()
+      offcr_stops = offcr_A.groupby(['year', 'subject_race']).size().unstack()
+      search_per_year = offcr_search / 12
+      stops_per_year = offcr_stops / 12
+      search_per_year = search_per_year.fillna(0)
+      stops_per_year = stops_per_year.fillna(0)
+
+      # Loop through each race and fit the model
+      cols = list(search_per_year)
+      race_plot = []
+      k_plot = []
+      re_plot = []
+      r2_plot = []
+
+      for k in cols:
+        behavior = stops_per_year[k].values
+        reinforcer = search_per_year[k].values
+        param_seeds = [16, 5]
+        c, cov = curve_fit(single_match, reinforcer, behavior) # Fit model
+        preds_from_obs = single_match(reinforcer, *c) # predictions for observed search per month
+        r_2 = r2_score(behavior, preds_from_obs) # calculate r^2 values
+
+      # Combine race fits into single df for easier plotting by race
+      fits_by_race = pd.DataFrame({"est_k":k_plot, "est_re":re_plot, "r^2":r2_plot, "race":list(search_per_year)})
+      
+      # Create data for plotting the curve predicted by the single-alternative matching
+      search_pred = np.linspace(0, search_per_year.max(), 100)
+
+      # Predictions for Asian/Pacific Islander
+      api_pred = []
+      try:
+        for m in list(range(len(search_pred))):
+          pred = single_match(search_pred[m], fits_by_race['est_k'][0], fits_by_race['est_re'][0])
+          api_pred.append(pred)
+      except:
+        print("Officer %s didn't search api" %i)
+
+      # Predictions for Black
+      black_pred = []
+      try:
+        for m in list(range(len(search_pred))):
+          pred = single_match(search_pred[m], fits_by_race['est_k'][1], fits_by_race['est_re'][1])
+          black_pred.append(pred)
+      except:
+        print("Officer %s didn't search black" %i)
+
+      # Predictions for Hispanic
+      hispanic_pred = []
+      try:
+        for m in list(range(len(search_pred))):
+          pred = single_match(search_pred[m], fits_by_race['est_k'][2], fits_by_race['est_re'][2])
+          hispanic_pred.append(pred)
+      except:
+        print("Officer %s didn't search hispanic" %i)
+
+      # Predictions for White
+      white_pred = []
+      try:
+        for m in list(range(len(search_pred))):
+          pred = single_match(search_pred[m], fits_by_race['est_k'][5], fits_by_race['est_re'][5])
+          white_pred.append(pred)
+      except:
+        print("Officer %s didn't search white" %i)
+
+      # Plot behavior (stops) as a function of putative reinforcers (citations)
+      plt.figure(figsize=(10, 7.5))
+
+      # Raw Data
+      plt.scatter(x=search_per_year['asian/pacific islander'], y=stops_per_year['asian/pacific islander'], marker='o', alpha=0.5, \
+                  color='black', s=100, label='Asian/Pacific Islander')
+      plt.scatter(x=search_per_year['black'], y=stops_per_year['black'], marker='o', alpha=0.5, \
+                  color='blue', s=100, label='Black')
+      plt.scatter(x=search_per_year['hispanic'], y=stops_per_year['hispanic'], marker='o', alpha=0.5, \
+                  color='red', s=100, label='Hispanic')
+      plt.scatter(x=search_per_year['white'], y=stops_per_year['white'], marker='o', alpha=0.5, \
+                  color='green', s=100, label='White')
+      
+      # Prediction Curves
+      plt.plot(search_pred, api_pred, marker='', linestyle='-', color='black')
+      plt.plot(search_pred, black_pred, marker='', linestyle='-', color='blue')
+      plt.plot(search_pred, hispanic_pred, marker='', linestyle='-', color='red')
+      plt.plot(search_pred, white_pred, marker='', linestyle='-', color='green')
+      plt.plot(search_pred, search_pred, marker='', linestyle='--', color='gray')
+
+      # Details
+      plt.xlabel('Searches per Month', fontsize=30)
+      plt.ylabel('Stops per Stops', fontsize=30)
+      plt.legend(fontsize=20, framealpha=0, bbox_to_anchor=(1, 0.95))
+      plt.xticks(fontsize=20)
+      plt.yticks(fontsize=20)
+      plt.title('Officer ID: %s' %i, fontsize=14)
+      plt.savefig('Officer_%s_Fit_by_Race.png' %i)
+      plt.show()
+  
+    except:
+      print('Error with officer %s' %i)
+
+#%% Isolate officers with specific fits we're interested in showing
+
+# 99%
+ninety_nine = all_fit[(all_fit['fit_type']=='overall') & (all_fit['vac']>0.95)]
+ninety_nine_un = ninety_nine['person_num'].unique()
+for j in ninety_nine_un:
+    overall_plot(i=j)
+
+# 80%
+
+# 60%
+
+# 40%
+
+# 20%
+
+# 0%
+
+#%% Create data for plotting the curve predicted by the single-alternative matching
+cites_pred = np.linspace(0, cites_per_day.max(), 100)
+stop_pred = []
+for j in list(range(len(cites_pred))): # Predicted stops
+  pred = round(single_match(cites_pred[j], c[0], c[1]), 4)
+  stop_pred.append(pred)
+
+# Plot behavior (stops) as a function of putative reinforcers (citations)
+plt.figure(figsize=(10, 7.5))
+plt.scatter(x=cites_per_day, y=stops_per_day, marker='o', alpha=0.5, \
+            color='black', s=100)
+plt.plot(cites_pred, stop_pred, marker='', linestyle='-', color='black')
+plt.xlabel('Citations per Day', fontsize=30)
+plt.ylabel('Stops per Day', fontsize=30)
+plt.title('Officer ID: %s' %i, fontsize =14)
+plt.text(cites_per_day.max(), 0, '$R^2$=%s' %'{}'.format(round(r_2, 2)), \
+        fontsize=26, horizontalalignment='right')
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
+plt.savefig('Officer_%s_Overall_Fit.png' %i)
+plt.show()
+
+
+# Plot behavior (stops) as a function of putative reinforcers (citations) and race
+plt.figure(figsize=(10, 7.5))
+
+# Raw Data
+plt.scatter(x=cites_per_day['asian/pacific islander'], y=stops_per_day['asian/pacific islander'], marker='o', alpha=0.5, \
+            color='black', s=100, label='Asian/Pacific Islander')
+plt.scatter(x=cites_per_day['black'], y=stops_per_day['black'], marker='o', alpha=0.5, \
+            color='blue', s=100, label='Black')
+plt.scatter(x=cites_per_day['hispanic'], y=stops_per_day['hispanic'], marker='o', alpha=0.5, \
+            color='red', s=100, label='Hispanic')
+plt.scatter(x=cites_per_day['white'], y=stops_per_day['white'], marker='o', alpha=0.5, \
+            color='green', s=100, label='White')
+
+# Prediction Curves
+plt.plot(cites_pred, api_pred, marker='', linestyle='-', color='black')
+plt.plot(cites_pred, black_pred, marker='', linestyle='-', color='blue')
+plt.plot(cites_pred, hispanic_pred, marker='', linestyle='-', color='red')
+plt.plot(cites_pred, white_pred, marker='', linestyle='-', color='green')
+plt.plot(cites_pred, cites_pred, marker='', linestyle='--', color='gray')
+
+# Details
+plt.xlabel('Citations per Day', fontsize=30)
+plt.ylabel('Stops per Day', fontsize=30)
+plt.legend(fontsize=20, framealpha=0, bbox_to_anchor=(1, 0.95))
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
+plt.title('Officer ID: %s' %i, fontsize=14)
+plt.savefig('Officer_%s_Fit_by_Race.png' %i)
+plt.show()

@@ -108,3 +108,41 @@ boxen(offcr_contra, 'Contraband')
 boxen(offcr_arrest, 'Arrests')
 
 #%% Combine all the fit dataframes
+fit_directory = '/Users/davidjcox/Downloads/All Fits/'
+all_fit = []
+troublesome = []
+err_type = []
+
+for subdir, dirs, files in os.walk(fit_directory):
+    for filename in files:
+        filepath = os.path.join(subdir, filename)
+        try:
+            if '.csv' in filepath:
+                str_end = filename.find('_')
+                string = filename[:str_end]
+                # Read in df and add cols for city sand state 
+                raw_data = pd.read_csv(filepath)
+                data = raw_data.copy()
+                data['city'] = string
+                all_fit.append(data)
+        except:
+            err = type(Exception).__name__
+            err_type.append(err)
+            troublesome.append(filename)
+
+# Combine into single dataframe
+all_fit = pd.concat(all_fit)
+
+# Save 
+all_fit.to_csv('all_fits.csv')
+
+#%% Separate out the different dfs for different events
+cite_fits = all_fit[all_fit['reniforcer']=='citations']
+
+#%% Print the proportion of officers whose databehavior was described by the single-alternative matching equation 
+# with vac greater than 90%
+print((round((cite_fits['vac'].ge(0.9).sum())/len(cite_fits), 5)), "= Citation Proportion >90%")
+print((round((search_fits['vac'].ge(0.9).sum())/len(search_fits), 5)), "= Search Proportion >90%")
+print((round((frisk_fits['vac'].ge(0.9).sum())/len(frisk_fits), 5)), "= Frisk Proportion >90%")
+print((round((contra_fits['vac'].ge(0.9).sum())/len(contra_fits), 5)), "= Contraband Found Proportion >90%")
+print((round((arrest_fits['vac'].ge(0.9).sum())/len(arrest_fits), 5)), "= Arrest Proportion >90%")

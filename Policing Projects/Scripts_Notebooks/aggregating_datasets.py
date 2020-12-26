@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Set path to local scripts
 sys.path.append('/Users/davidjcox/Dropbox/Coding/Local Python Modules/')
@@ -26,7 +27,7 @@ os.chdir(directory)
 # Change settings to view all columns of data
 pd.set_option('display.max_columns', None)
 
-#%% Loop through the files and combine all the datasets. 
+#%% Loop through the files and combine all the raw datasets. 
 all_data = []
 troublesome = []
 err_type = []
@@ -68,12 +69,12 @@ all_df.year.describe()
 len(all_df.officer_id_hash.unique())
 
 #%% Create individual data frames for the different independent and dependent variables
-offcr_stops = data.groupby(['year', 'month', 'officer_id_hash']).size()
-offcr_cites = data.groupby(['year', 'month', 'officer_id_hash', 'citation_issued']).size()
-offcr_search = data.groupby(['year', 'month', 'officer_id_hash', 'search_conducted']).size()
-offcr_frisk = data.groupby(['year', 'month', 'officer_id_hash', 'frisk_performed']).size()
-offcr_contra = data.groupby(['year', 'month', 'officer_id_hash', 'contraband_found']).size()
-offcr_arrest = data.groupby(['year', 'month', 'officer_id_hash', 'arrest_made']).size()
+offcr_stops = all_df.groupby(['year', 'month', 'officer_id_hash']).size()
+offcr_cites = all_df.groupby(['year', 'month', 'officer_id_hash', 'citation_issued']).size()
+offcr_search = all_df.groupby(['year', 'month', 'officer_id_hash', 'search_conducted']).size()
+offcr_frisk = all_df.groupby(['year', 'month', 'officer_id_hash', 'frisk_performed']).size()
+offcr_contra = all_df.groupby(['year', 'month', 'officer_id_hash', 'contraband_found']).size()
+offcr_arrest = all_df.groupby(['year', 'month', 'officer_id_hash', 'arrest_made']).size()
 
 #%% Print descriptions of each subset dataframe 
 from scipy.stats import skew
@@ -105,3 +106,5 @@ boxen(offcr_search, 'Searches')
 boxen(offcr_frisk, 'Frisks')
 boxen(offcr_contra, 'Contraband')
 boxen(offcr_arrest, 'Arrests')
+
+#%% Combine all the fit dataframes

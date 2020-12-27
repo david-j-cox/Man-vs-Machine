@@ -65,7 +65,7 @@ all_df['month'] = pd.DatetimeIndex(all_df['date']).month
 all_df.to_csv('all_data.csv')
 
 #%% If picking up fresh
-raw_data = pd.read_csv('all_data.csv').drop(['Unnamed: 0'], axis=1)
+raw_data = pd.read_csv('all_data.csv', low_memory=False).drop(['Unnamed: 0'], axis=1)
 all_df = raw_data.copy()
 
 #%% Some one-off stats for the ms
@@ -137,15 +137,57 @@ for subdir, dirs, files in os.walk(fit_directory):
 # Combine into single dataframe
 all_fit = pd.concat(all_fit)
 
-# Save 
+# Save
+all_fit = all_fit.reset_index().drop(['index', 'Unnamed: 0'], axis=1)
 all_fit.to_csv('all_fits.csv')
 all_fit[::50000]
 
 #%% Some unique hash ids were generated across multiple departments. Create unique id using city and hash id
-
+all_fit['unique_id'] = all_fit['person_num'] + "_" + all_fit['city']
+all_fit.head(20)
 
 #%% Separate out the different dfs for different events
-cite_fits = all_fit[all_fit['reniforcer']=='citations']
+ninety_fit = all_fit[(all_fit['vac']>=0.90)]
+print(len(ninety_fit.unique_id.unique())/(len(all_fit.unique_id.unique())))
+eighty_fit = all_fit[(all_fit['vac']>=0.80)]
+print(len(eighty_fit.unique_id.unique())/(len(all_fit.unique_id.unique())))
+
+#%% Info for each specific reinforcer
+cite_fits = all_fit[(all_fit['reinforcer']=='citations')]
+search_fits = all_fit[(all_fit['reinforcer']=='searches')]
+frisk_fits = all_fit[(all_fit['reinforcer']=='frisks')]
+contra_fits = all_fit[(all_fit['reinforcer']=='contraband')]
+arrest_fits = all_fit[(all_fit['reinforcer']=='arrests')]
+
+#%% Violin plots of fit distributions
+def violin(df, y_label):
+  f, ax = plt.subplots(figsize=(20, 8))
+  sns.violinplot(x='fit_type', y='vac', data=df, order=['overall', 'asian/pacific islander', 'black', 'hispanic', 
+                                                        'white', 'other', 'unknown'])
+  plt.xlabel('', fontsize=20, labelpad=(16))
+  plt.ylabel(y_label, fontsize=20, labelpad=(16))
+  plt.ylim(-3, 1)
+  plt.yticks(fontsize=12)
+  plt.xticks(fontsize=12, rotation=45)
+  right_side = ax.spines["right"]
+  right_side.set_visible(False)
+  top = ax.spines["top"]
+  top.set_visible(False)
+  plt.show()
+
+violin(cite_fits, 'Citations')
+violin(search_fits, 'Searches')
+violin(frisk_fits, 'Frisks')
+violin(contra_fits, 'Contraband')
+violin(arrest_fits, 'Arrests')
+
+#%% Print the proportion of officers whose databehavior was described by the single-alternative matching equation 
+# with vac greater than 90%
+print((round((cite_fits['vac'].ge(0.9).sum()), 5)), "= Citation Proportion >90%")
+print((round((search_fits['vac'].ge(0.9).sum()), 5)), "= Search Proportion >90%")
+print((round((frisk_fits['vac'].ge(0.9).sum()), 5)), "= Frisk Proportion >90%")
+print((round((contra_fits['vac'].ge(0.9).sum()), 5)), "= Contraband Found Proportion >90%")
+print((round((arrest_fits['vac'].ge(0.9).sum()), 5)), "= Arrest Proportion >90%")
 
 #%% Print the proportion of officers whose databehavior was described by the single-alternative matching equation 
 # with vac greater than 90%
@@ -154,6 +196,22 @@ print((round((search_fits['vac'].ge(0.9).sum())/len(search_fits), 5)), "= Search
 print((round((frisk_fits['vac'].ge(0.9).sum())/len(frisk_fits), 5)), "= Frisk Proportion >90%")
 print((round((contra_fits['vac'].ge(0.9).sum())/len(contra_fits), 5)), "= Contraband Found Proportion >90%")
 print((round((arrest_fits['vac'].ge(0.9).sum())/len(arrest_fits), 5)), "= Arrest Proportion >90%")
+
+#%% Print the proportion of officers whose databehavior was described by the single-alternative matching equation 
+# with vac greater than 80%
+print((round((cite_fits['vac'].ge(0.8).sum()), 5)), "= Citation Proportion >80%")
+print((round((search_fits['vac'].ge(0.8).sum()), 5)), "= Search Proportion >80%")
+print((round((frisk_fits['vac'].ge(0.8).sum()), 5)), "= Frisk Proportion >80%")
+print((round((contra_fits['vac'].ge(0.8).sum()), 5)), "= Contraband Found Proportion >80%")
+print((round((arrest_fits['vac'].ge(0.8).sum()), 5)), "= Arrest Proportion >80%")
+
+#%% Print the proportion of officers whose databehavior was described by the single-alternative matching equation 
+# with vac greater than 80%
+print((round((cite_fits['vac'].ge(0.8).sum())/len(cite_fits), 5)), "= Citation Proportion >80%")
+print((round((search_fits['vac'].ge(0.8).sum())/len(search_fits), 5)), "= Search Proportion >80%")
+print((round((frisk_fits['vac'].ge(0.8).sum())/len(frisk_fits), 5)), "= Frisk Proportion >80%")
+print((round((contra_fits['vac'].ge(0.8).sum())/len(contra_fits), 5)), "= Contraband Found Proportion >80%")
+print((round((arrest_fits['vac'].ge(0.8).sum())/len(arrest_fits), 5)), "= Arrest Proportion >80%")
 
 #%%####################################################################################################################
 # SINGLE-ALTERNATIVE MATCHING FITS

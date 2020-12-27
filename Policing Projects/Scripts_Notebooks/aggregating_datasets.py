@@ -166,7 +166,7 @@ def violin(df, y_label):
                                                         'white', 'other', 'unknown'])
   plt.xlabel('', fontsize=20, labelpad=(16))
   plt.ylabel(y_label, fontsize=20, labelpad=(16))
-  plt.ylim(-3, 1)
+  plt.ylim(-2, 1)
   plt.yticks(fontsize=12)
   plt.xticks(fontsize=12, rotation=45)
   right_side = ax.spines["right"]
@@ -180,6 +180,27 @@ violin(search_fits, 'Searches')
 violin(frisk_fits, 'Frisks')
 violin(contra_fits, 'Contraband')
 violin(arrest_fits, 'Arrests')
+
+#%% Try boxen here
+def boxen(df, y_label):
+  f, ax = plt.subplots(figsize=(20, 8))
+  sns.boxplot(x='fit_type', y='vac', color='white', data=df, order=['overall', 'asian/pacific islander', 'black', 
+                                                                      'hispanic', 'white', 'other', 'unknown'])
+  plt.xlabel('', fontsize=20, labelpad=(16))
+  plt.ylabel(y_label, fontsize=20, labelpad=(16))
+  plt.ylim(-2, 1)
+  plt.yticks(fontsize=12)
+  right_side = ax.spines["right"]
+  right_side.set_visible(False)
+  top = ax.spines["top"]
+  top.set_visible(False)
+  plt.show()
+  
+boxen(cite_fits, 'Citations')
+boxen(search_fits, 'Searches')
+boxen(frisk_fits, 'Frisks')
+boxen(contra_fits, 'Contraband')
+boxen(arrest_fits, 'Arrests')
 
 #%% Print the proportion of officers whose databehavior was described by the single-alternative matching equation 
 # with vac greater than 90%

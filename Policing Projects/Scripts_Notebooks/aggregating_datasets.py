@@ -112,7 +112,7 @@ boxen(offcr_contra, 'Contraband')
 boxen(offcr_arrest, 'Arrests')
 
 #%% Combine all the fit dataframes
-fit_directory = '/Users/davidjcox/Downloads/All Fits/'
+fit_directory = '/Users/davidjcox/Downloads/All Fits Data/'
 all_fit = []
 troublesome = []
 err_type = []
@@ -140,6 +140,9 @@ all_fit = pd.concat(all_fit)
 # Save 
 all_fit.to_csv('all_fits.csv')
 all_fit[::50000]
+
+#%% Some unique hash ids were generated across multiple departments. Create unique id using city and hash id
+
 
 #%% Separate out the different dfs for different events
 cite_fits = all_fit[all_fit['reniforcer']=='citations']

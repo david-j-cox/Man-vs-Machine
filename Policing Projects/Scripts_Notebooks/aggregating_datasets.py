@@ -64,6 +64,10 @@ all_df['month'] = pd.DatetimeIndex(all_df['date']).month
 # Save 
 all_df.to_csv('all_data.csv')
 
+#%% If picking up fresh
+raw_data = pd.read_csv('all_data.csv').drop(['Unnamed: 0'], axis=1)
+all_df = raw_data.copy()
+
 #%% Some one-off stats for the ms
 all_df.year.describe()
 len(all_df.officer_id_hash.unique())

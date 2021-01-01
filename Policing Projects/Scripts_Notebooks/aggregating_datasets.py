@@ -37,18 +37,19 @@ for subdir, dirs, files in os.walk(directory):
         filepath = os.path.join(subdir, filename)
         try:
             if '.csv' in filepath:
-                str_end = filename.find('2020')-1
-                string = filename[:str_end]
-                sep = string.find('_')
-                t_city = string[:sep]
-                t_state = string[(sep+1):]
-                # Read in df and add cols for city sand state 
-                raw_data = pd.read_csv(filename)
-                data = raw_data.copy()
-                data['city'] = t_city
-                data['state'] = t_state
-                print(data.head())
-                all_data.append(data)
+                if ('all_fits' not in filepath) or ('all_data' not in filepath):
+                    print(filepath)
+                    str_end = filename.find('2020')-1
+                    string = filename[:str_end]
+                    sep = string.find('_')
+                    t_city = string[:sep]
+                    t_state = string[(sep+1):]
+                    # Read in df and add cols for city sand state 
+                    raw_data = pd.read_csv(filename)
+                    data = raw_data.copy()
+                    data['city'] = t_city
+                    data['state'] = t_state
+                    all_data.append(data)
         except:
             err = type(Exception).__name__
             err_type.append(err)

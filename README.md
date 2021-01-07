@@ -11,3 +11,6 @@ Data for a second project were obtained from the Stanford Open Policing Project 
 
 # Published Projects
 [TBD: Two manuscripts are currently under review. More to come.]
+
+# Citation
+To cite this repository, please use the following: [![DOI](https://zenodo.org/badge/240762540.svg)](https://zenodo.org/badge/latestdoi/240762540)

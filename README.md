@@ -6,7 +6,7 @@ The purpose of science is to predict and control the subject matter being invest
 The purpose of this project is to compare the predictive ability of models when the models are: based only on past models from operant choice research, solely based on machine learning, and a combination of both behavior analytic and machine learning models.
 
 # Data
-Data for one project were obtained from MLB's baseball savant (doi:10.5281/zenodo.4088070). 
+Data for one project were obtained from MLB's baseball savant (https://baseballsavant.mlb.com/statcast_search). 
 Data for a second project were obtained from the Stanford Open Policing Project (https://openpolicing.stanford.edu/data/) and the Mapping Police Violence Project (https://mappingpoliceviolence.org/). 
 
 # Published Projects

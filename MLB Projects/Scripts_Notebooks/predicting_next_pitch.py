@@ -15,14 +15,14 @@ import random
 sys.path.append('/Users/davidjcox/Dropbox/Coding/Local Python Modules/')
 
 # Set path to data
-directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/'
+directory = '/Users/davidjcox/Dropbox (Personal)/Projects/CurrentProjectManuscripts/Empirical/PersonalFun/Matching/KaggleWebscrapingAnalysis/Man-vs-Machine/MLB Projects/Pitch Data/'
 os.chdir(directory)
 
 # Change settings to view all columns of data
 pd.set_option('display.max_columns', None)
 
 #%% Read in data
-raw_data = pd.read_csv('All_MLB_data_for_GME.csv')
+raw_data = pd.read_csv('All_MLB_data_for_GME.csv', low_memory=False)
 data = raw_data.copy()
 data.head()
 

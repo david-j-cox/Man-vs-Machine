@@ -35,15 +35,55 @@ verlander_df = verlander_df.sort_values(by=['game_date', 'at_bat_number', 'pitch
 verlander_df.head(25)
 verlander_df.to_csv('verlander_df.csv')
 
-#%% Subset df by pitch type
-unique_pitches = verlander_df['pitch_name'].unique()
-FF = verlander_df[verlander_df['pitch_type']=='FF']
-CU = verlander_df[verlander_df['pitch_type']=='CU']
-FS = verlander_df[verlander_df['pitch_type']=='FS']
-FC = verlander_df[verlander_df['pitch_type']=='FC']
-SL = verlander_df[verlander_df['pitch_type']=='SL']
-FT = verlander_df[verlander_df['pitch_type']=='FT']
-IN = verlander_df[verlander_df['pitch_type']=='IN']
-PO = verlander_df[verlander_df['pitch_type']=='PO']
+#%% Define the environment
+'''
+General framework:
+Runners = [1st, 2nd, 3rd]
+Count, outs = [Balls, Strikes, Outs]
+Inning = [1-3, 4-6, 7-9] --> [innings 1-2-3, 4-5-6, 7-8-9]
+Score = [Home, Away, Assign] --> Assign = 0 if pitcher is home, 1 if away
 
-#%% 
+For example, a game state at the beginning of the game with the home pitcher pitching:
+    [[0, 0, 0], 
+     [0, 0, 0], 
+     [1, 0, 0], 
+     [0, 0, 0]]
+
+A game state in the bottom of the 4th inning, runner on 2nd, 2 outs, 2 balls, 1 strike, and a score of 6-4 (home-away):
+    [[0, 1, 0], 
+     [2, 1, 2], 
+     [0, 4, 0], 
+     [6, 4, 1]]
+'''
+
+#%% Basic reinforcement learning model.  After each pitch: 
+#   - Update game state 
+#   - Reinforce for guessing right pitch
+#   - Punish for guessing wrong
+
+
+#%% Only local reinforcement contingencies. After each pitch:
+#   - Update game state
+#   - Reinforce for guessing right pitch
+#   - Punish for guessing wrong pitch
+#   - Extra weight on pitch type if led to strike or out (Amount? How many pitches does it last? Insert memory decay? RaC model?)
+#   - Extra weight on pitch type if led to ball or hit (Amount? How many pitches does it last? Insert memory decay? Rac model?)
+
+
+#%% Only molar  reinforcement contingencies. After each pitch:
+#   - Update game state
+#   - Reinforce for guessing right pitch
+#   - Punish for guessing wrong pitch
+#   - Extra reinforcement weight on pitch type based on Baum 2012 (Amount? How many pitches are considered? Insert memory decay? RaC model?)
+#   - Extra punishment weight on pitch type based on Baum 2012 (Amount? How many pitches are considered? Insert memory decay? Rac model?)
+
+
+#%% Local and molar contingencies. After each pitch: 
+#   - Update game state
+#   - Reinforce for guessing right pitch
+#   - Punish for guessing wrong pitch
+#   - Extra weight on pitch type if led to strike or out (Amount? How many pitches does it last? Insert memory decay? RaC model?)
+#   - Extra weight on pitch type if led to ball or hit (Amount? How many pitches does it last? Insert memory decay? Rac model?)
+#   - Extra reinforcement weight on pitch type based on Baum 2012 (Amount? How many pitches are considered? Insert memory decay? RaC model?)
+#   - Extra punishment weight on pitch type based on Baum 2012 (Amount? How many pitches are considered? Insert memory decay? Rac model?)
+

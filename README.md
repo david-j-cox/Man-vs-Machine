@@ -3,7 +3,7 @@
 The purpose of science is to predict and control the subject matter being investigated. For behavior science, the subject matter is behavior. For nearly 100 years, behavior analysts have developed quantitative models that allow us to predict and control organismic behavior. Additionally, over the past 10-20 years, advances in technology and computational modeling have increased humans' ability to employ sophisticated machine learning techniques using behavioral data. Here, again, the goal is often to predict and control human behavior. 
 
 # Purpose
-The purpose of this project is to compare the predictive ability of models when the models are: based only on past models from operant choice research, solely based on machine learning, and a combination of both behavior analytic and machine learning models.
+The purpose of this project is to compare the predictive ability of models when the models are: based only on past models from operant or respondent research, solely based on machine learning, and a combination of both behavior analytic and machine learning models.
 
 # Data
 Data for one project were obtained from MLB's baseball savant (https://baseballsavant.mlb.com/statcast_search). 

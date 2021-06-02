@@ -10,7 +10,7 @@ Data for one project were obtained from MLB's baseball savant (https://baseballs
 Data for a second project were obtained from the Stanford Open Policing Project (https://openpolicing.stanford.edu/data/) and the Mapping Police Violence Project (https://mappingpoliceviolence.org/). 
 
 # Published Projects
-[TBD: Two manuscripts are currently under review. More to come.]
+Cox, D.J., Klapes, B., & Falligant, J.M. (in press). Scaling N from 1 to 1,000,000: Application of the generalized matching law to big data contexts. Perspectives on Behavior Science. doi: 10.1007/s40614-021-00298-8
 
 # Citation
 To cite this repository, please use the following: [![DOI](https://zenodo.org/badge/240762540.svg)](https://zenodo.org/badge/latestdoi/240762540)

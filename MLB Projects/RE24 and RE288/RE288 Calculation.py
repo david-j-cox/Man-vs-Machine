@@ -18,6 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from RE288 import RE288_calc
+from RE24 import RE24_calc
 
 # Point to local file for custom scripts. 
 sys.path.append('C:/Users/David-PC/Dropbox/Coding/Local Python Modules/')

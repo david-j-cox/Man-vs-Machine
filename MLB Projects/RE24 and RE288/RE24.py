@@ -10,7 +10,7 @@
     Website: https://davidjcox.xyz
 """
 
-def RE24_calc(data, outs, runner_first, runner_second, runner_third):
+def RE24_calc(outs, runner_first, runner_second, runner_third):
     '''
     Assigns game state number dependent on the unique state of the baseball
     game at the time a pitch is thrown. RE288 uses all possible combinations of
@@ -20,64 +20,62 @@ def RE24_calc(data, outs, runner_first, runner_second, runner_third):
     :param runner_first: column containing whether a runner is on first base; 0 = no runner, 1 = runner
     :param runner_second: column containing whether a runner is on first base; 0 = no runner, 1 = runner
     :param runner_third: column containing whether a runner is on first base; 0 = no runner, 1 = runner
-    :return: label for which of the 24 game states the pitcher is in when throwing a pitch
+    :return: run expectancy for that particular game state
     '''
-    game_state = 'none'
-    for index, row in data.iterrows():
-        if row[outs]==0 and row[runner_first]==0.0 and row[runner_second]==0.0 and row[runner_third]==0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]==0.0 and row[runner_second]==0.0 and row[runner_third]==0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]==0.0 and row[runner_second]==0.0 and row[runner_third]==0.0:
-            game_state = 3
+    re24 = 'none'
+    if outs==0 and runner_first==0.0 and runner_second==0.0 and runner_third==0.0:
+        re24 = 0.461
+    elif outs==1 and runner_first==0.0 and runner_second==0.0 and runner_third==0.0:
+        re24 = 0.243
+    elif outs==2 and runner_first==0.0 and runner_second==0.0 and runner_third==0.0:
+        re24 = 0.095
+    elif outs==0 and runner_first>0.0 and runner_second==0.0 and runner_third==0.0:
+        re24 = 0.831
+    elif outs==1 and runner_first>0.0 and runner_second==0.0 and runner_third==0.0:
+        re24 = 0.489
+    elif outs==2 and runner_first>0.0 and runner_second==0.0 and runner_third==0.0:
+        re24 = 0.214
 
-        if row[outs]==0 and row[runner_first]>0.0 and row[runner_second]==0.0 and row[runner_third]==0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]>0.0 and row[runner_second]==0.0 and row[runner_third]==0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]>0.0 and row[runner_second]==0.0 and row[runner_third]==0.0:
-            game_state = 3
+    elif outs==0 and runner_first==0.0 and runner_second>0.0 and runner_third==0.0:
+        re24 = 1.068
+    elif outs==1 and runner_first==0.0 and runner_second>0.0 and runner_third==0.0:
+        re24 = 0.644
+    elif outs==2 and runner_first==0.0 and runner_second>0.0 and runner_third==0.0:
+        re24 = 0.305
 
-        if row[outs]==0 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]==0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]==0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]==0.0:
-            game_state = 3
+    elif outs==0 and runner_first==0.0 and runner_second==0.0 and runner_third>0.0:
+        re24 = 1.426
+    elif outs==1 and runner_first==0.0 and runner_second==0.0 and runner_third>0.0:
+        re24 = 0.865
+    elif outs==2 and runner_first==0.0 and runner_second==0.0 and runner_third>0.0:
+        re24 = 0.413
 
-        if row[outs]==0 and row[runner_first]==0.0 and row[runner_second]==0.0 and row[runner_third]>0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]==0.0 and row[runner_second]==0.0 and row[runner_third]>0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]==0.0 and row[runner_second]==0.0 and row[runner_third]>0.0:
-            game_state = 3
+    elif outs==0 and runner_first>0.0 and runner_second>0.0 and runner_third==0.0:
+        re24 = 1.373
+    elif outs==1 and runner_first>0.0 and runner_second>0.0 and runner_third==0.0:
+        re24 = 0.908
+    elif outs==2 and runner_first>0.0 and runner_second>0.0 and runner_third==0.0:
+        re24 = 0.343
 
-        if row[outs]==0 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]==0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]==0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]==0.0:
-            game_state = 3
+    elif outs==0 and runner_first>0.0 and runner_second==0.0 and runner_third>0.0:
+        re24 = 1.798
+    elif outs==1 and runner_first>0.0 and runner_second==0.0 and runner_third>0.0:
+        re24 = 1.14
+    elif outs==2 and runner_first>0.0 and runner_second==0.0 and runner_third>0.0:
+        re24 = 0.471
 
-        if row[outs]==0 and row[runner_first]>0.0 and row[runner_second]==0.0 and row[runner_third]>0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]>0.0 and row[runner_second]==0.0 and row[runner_third]>0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]>0.0 and row[runner_second]==0.0 and row[runner_third]>0.0:
-            game_state = 3
+    elif outs==0 and runner_first==0.0 and runner_second>0.0 and runner_third>0.0:
+        re24 = 1.92
+    elif outs==1 and runner_first==0.0 and runner_second>0.0 and runner_third>0.0:
+        re24 = 1.352
+    elif outs==2 and runner_first==0.0 and runner_second>0.0 and runner_third>0.0:
+        re24 = 0.57
 
-        if row[outs]==0 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]==0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
-            game_state = 3
-
-        if row[outs]==0 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]>.0:
-            game_state = 1
-        elif row[outs]==1 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
-            game_state = 2
-        elif row[outs]==2 and row[runner_first]>0.0 and row[runner_second]>0.0 and row[runner_third]>0.0:
-            game_state = 3
+    elif outs==0 and runner_first>0.0 and runner_second>0.0 and runner_third>.0:
+        re24 = 2.282
+    elif outs==1 and runner_first>0.0 and runner_second>0.0 and runner_third>0.0:
+        re24 = 1.52
+    elif outs==2 and runner_first>0.0 and runner_second>0.0 and runner_third>0.0:
+        re24 = 0.736
     
-    return game_state
+    return re24

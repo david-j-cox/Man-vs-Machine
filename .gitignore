@@ -2,3 +2,6 @@
 *.DS_Store
 *.git
 *ipynb_checkpoints
+*.png
+*.xlsx
+*.pdf
